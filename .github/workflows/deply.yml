@@ -22,6 +22,9 @@ jobs:
       - name: Run a multi-line script
         run: |
           mkdir dist
+          mkdir -p artifacts/lib/docs
+          mkdir -p artifacts/lib/coverage
+          mkdir -p artifacts/site
           cp artifacts/lib/docs dist/docs -r
           cp artifacts/lib/coverage dist/coverage -r
           cp artifacts/site dist -r
