@@ -27,7 +27,7 @@ jobs:
           mkdir -p artifacts/site
           cp artifacts/lib/docs dist/docs -r
           cp artifacts/lib/coverage dist/coverage -r
-          cp artifacts/site dist -r
+          cp artifacts/site/. dist/ -r
 
       - name: Push to Pages
         uses: peaceiris/actions-gh-pages@v3
