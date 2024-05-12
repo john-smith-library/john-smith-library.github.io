@@ -1,0 +1,178 @@
+<!DOCTYPE html><head><title>JohnSmith Library - Introduction</title><meta charset="UTF-8"><!--if lt IE 9script(type="text/javascript", src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
+--><link rel="stylesheet" href="../assets/styles/prism.css"><link rel="stylesheet" href="../assets/styles/index.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700" type="text/css"><style type="text/css">.app {
+    display: flex;
+    flex-direction: column;
+}
+
+.app h1 {
+    border-bottom: 1px dashed #DDDDDD;
+    margin-bottom: 15px;
+    padding: 15px 0;
+    font-size: 1.5em;
+}
+
+.application__content {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.application__content aside {
+    flex: 0 0 150px;
+}
+
+.application__content aside ul,
+.application__content aside ul li {
+    list-style-type: none;
+    list-style-image: none;
+}
+
+.application__content aside ul li a {
+    cursor: pointer;
+    padding: 10px 20px;
+    display: block;
+}
+
+.application__content aside ul li a:hover {
+    background: #0077aa;
+    color: #FFFFFF;
+}
+
+.application__content aside ul li.active a {
+    background: #009fe3;
+    color: #FFFFFF;
+}
+
+.application__content main {
+    flex: 1;
+    padding-left: 15px;
+}
+
+.application__content main p {
+    margin-bottom: 15px;
+}
+
+.application__content main h2 {
+    font-weight: 1.3;
+    margin-bottom: 15px;
+}
+
+.application__content main h3 {
+    font-weight: 1.1;
+    margin-bottom: 15px;
+}
+</style><script src="../assets/scripts/prism.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-41108809-1', 'john-smith-js.com');
+ga('send', 'pageview');</script></head><html><body class="application"><main class="main"><section class="panel"><header class="panel__header">TypeScript</header><section class="panel__content"><pre class="scrollable"><code class="language-tsx">/**
+ * The following code is just a quick demo of
+ * John Smith approach.
+ */
+
+import { Application } from 'john-smith';
+import { ObservableList, ObservableValue } from 'john-smith/reactive';
+import { Value, List, Null } from 'john-smith/view/components';
+
+import 'john-smith/view/jsx';
+import { map } from &quot;john-smith/reactive/transformers/map&quot;;
+
+class UserViewModel {
+    constructor(
+        public readonly firstName: string,
+        public readonly lastName: string,
+        public readonly bio: string) {
+    }
+}
+
+class ApplicationViewModel {
+    users = new ObservableList&lt;UserViewModel&gt;([
+        new UserViewModel(
+            'John',
+            'Smith',
+            `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Praesent quis risus nunc. Praesent nulla massa, tincidunt ut
+            nisi a, lobortis auctor risus. In tincidunt id massa sit amet finibus.`),
+
+        new UserViewModel(
+            'Joe',
+            'Doe',
+            `Sed et bibendum mi. Sed aliquet, libero eget posuere iaculis,
+            lectus massa consequat eros, vel sagittis ligula sem at lectus.
+            Aenean porttitor suscipit consequat.`),
+    ]);
+
+    selectedUser = new ObservableValue&lt;UserViewModel|null&gt;(null);
+
+    select(user: UserViewModel) {
+        this.selectedUser.setValue(user);
+    }
+}
+
+/**
+ * User Details View defined as a class.
+ */
+class UserDetailsView {
+    constructor(private viewModel: UserViewModel) {
+    }
+
+    template() {
+        return &lt;section&gt;
+            &lt;h2&gt;User Details&lt;/h2&gt;
+            &lt;p&gt;First Name: {this.viewModel.firstName}&lt;/p&gt;
+            &lt;p&gt;First Name: {this.viewModel.lastName}&lt;/p&gt;
+            &lt;h3&gt;Bio&lt;/h3&gt;
+            &lt;p&gt;{this.viewModel.bio}&lt;/p&gt;
+        &lt;/section&gt;;
+    }
+}
+
+/**
+ * Application View defined as an arrow function (compact form)
+ */
+const ApplicationView = (viewModel: ApplicationViewModel) =&gt;
+    &lt;section class=&quot;app&quot;&gt;
+        &lt;h1&gt;Users Registry&lt;/h1&gt;
+
+        &lt;section class=&quot;application__content&quot;&gt;
+            &lt;aside&gt;
+                &lt;ul&gt;
+                    &lt;List
+                        model={viewModel.users}
+                        view={ u =&gt;
+                            &lt;li $className={map(viewModel.selectedUser,
+                                x =&gt; x === u ? 'active' : null)}&gt;
+
+                                &lt;a _click={() =&gt; {viewModel.select(u);}}&gt;
+                                    {u.firstName} {u.lastName}
+                                &lt;/a&gt;
+                            &lt;/li&gt;
+                        }/&gt;
+                &lt;/ul&gt;
+            &lt;/aside&gt;
+
+            &lt;main&gt;
+                &lt;Null
+                    view={() =&gt; &lt;p&gt;Please select a User&lt;/p&gt;}
+                    model={viewModel.selectedUser} /&gt;
+
+                &lt;Value view={UserDetailsView} model={viewModel.selectedUser} /&gt;
+            &lt;/main&gt;
+        &lt;/section&gt;
+    &lt;/section&gt;;
+
+const
+    application = new Application(),
+    applicationViewModel = new ApplicationViewModel();
+
+/**
+ * Main entry point -- rendering the application
+ * to #root element.
+ */
+application.render(
+    'root',
+    ApplicationView,
+    applicationViewModel);
+</code></pre></section></section><section class="panel"><header class="panel__header">Result</header><section class="panel__content results-container"><div class="scrollable" id="destination"><div id="root"></div>
+<script>(function () {}());</script></div></section></section></main><script src="index.js"></script></body></html>
