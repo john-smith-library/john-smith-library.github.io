@@ -1,0 +1,96 @@
+<!DOCTYPE html><head><title>JohnSmith Library - Class Binding</title><meta charset="UTF-8"><!--if lt IE 9script(type="text/javascript", src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
+--><link rel="stylesheet" href="../../assets/styles/prism.css"><link rel="stylesheet" href="../../assets/styles/index.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700" type="text/css"><style type="text/css">.active {
+    background: #669900;
+}
+
+.stopped {
+    background: #9a6e3a;
+}
+
+.rounded {
+    border-radius: 13px;
+}
+
+td {
+    min-width: 50px;
+}</style><script src="../../assets/scripts/prism.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-41108809-1', 'john-smith-js.com');
+ga('send', 'pageview');</script></head><html><body class="application"><main class="main"><section class="panel"><header class="panel__header">TypeScript</header><section class="panel__content"><pre class="scrollable"><code class="language-tsx">import { Application } from 'john-smith';
+import { ObservableValue } from 'john-smith/reactive';
+import 'john-smith/view/jsx';
+
+class ApplicationViewModel {
+  public readonly rounded = new ObservableValue&lt;boolean&gt;(true);
+  public readonly active = new ObservableValue&lt;boolean&gt;(true);
+  public readonly status = new ObservableValue&lt;'active' | 'stopped'&gt;('active');
+
+  public toggleActive() {
+    this.active.mutate(x =&gt; !x);
+  }
+
+  public toggleRounded() {
+    this.rounded.mutate(x =&gt; !x);
+  }
+
+  public toggleStatus() {
+    this.status.mutate(x =&gt; (x === 'active' ? 'stopped' : 'active'));
+  }
+}
+
+const ApplicationView = (viewModel: ApplicationViewModel) =&gt; {
+  return (
+    &lt;section&gt;
+      &lt;h1&gt;Class Bindings Demo&lt;/h1&gt;
+
+      &lt;table&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;
+            &lt;th&gt;
+              Class bound via &lt;code&gt;attribute&lt;/code&gt;:
+            &lt;/th&gt;
+            &lt;td class={viewModel.status}&gt;&lt;/td&gt;
+            &lt;td&gt;
+              &lt;button _click={viewModel.toggleStatus}&gt;Toggle Status&lt;/button&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;
+              Class bound via &lt;code&gt;$className&lt;/code&gt;:
+            &lt;/th&gt;
+            &lt;td $className={viewModel.status}&gt;&lt;/td&gt;
+            &lt;td&gt;
+              &lt;button _click={viewModel.toggleStatus}&gt;Toggle Status&lt;/button&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;
+              Multiple classes bound via &lt;code&gt;$className&lt;/code&gt;:
+            &lt;/th&gt;
+            &lt;td
+              $className={{
+                active: viewModel.active,
+                rounded: viewModel.rounded,
+              }}
+            &gt;&lt;/td&gt;
+            &lt;td&gt;
+              &lt;button
+                _click={viewModel.toggleActive}
+                style=&quot;margin-right: 10px;&quot;
+              &gt;
+                Toggle Active
+              &lt;/button&gt;
+              &lt;button _click={viewModel.toggleRounded}&gt;Toggle Rounded&lt;/button&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/section&gt;
+  );
+};
+
+new Application().render('root', ApplicationView, new ApplicationViewModel());
+</code></pre></section></section><section class="panel"><header class="panel__header">Result</header><section class="panel__content results-container"><div class="scrollable" id="destination"><div id="root"></div>
+<script>(function () {}());</script></div></section></section></main><script src="index.js"></script></body></html>

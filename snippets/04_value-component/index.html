@@ -1,0 +1,87 @@
+<!DOCTYPE html><head><title>JohnSmith Library - Value Component</title><meta charset="UTF-8"><!--if lt IE 9script(type="text/javascript", src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
+--><link rel="stylesheet" href="../assets/styles/prism.css"><link rel="stylesheet" href="../assets/styles/index.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700" type="text/css"><style type="text/css">.app {
+    display: flex;
+    flex-direction: column;
+}
+
+.app h1 {
+    border-bottom: 1px dashed #DDDDDD;
+    margin-bottom: 15px;
+    padding: 15px 0;
+    font-size: 1.5em;
+}</style><script src="../assets/scripts/prism.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-41108809-1', 'john-smith-js.com');
+ga('send', 'pageview');</script></head><html><body class="application"><main class="main"><section class="panel"><header class="panel__header">TypeScript</header><section class="panel__content"><pre class="scrollable"><code class="language-tsx">import { Application } from 'john-smith';
+import { ObservableValue } from 'john-smith/reactive';
+import { Value } from 'john-smith/view/components';
+
+import 'john-smith/view/jsx';
+
+class UserViewModel {
+  constructor(
+    public readonly firstName: string,
+    public readonly lastName: string,
+    public readonly bio: string
+  ) {}
+}
+
+const johnSmithUser = new UserViewModel(
+  'John',
+  'Smith',
+  `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Praesent quis risus nunc. Praesent nulla massa, tincidunt ut
+            nisi a, lobortis auctor risus. In tincidunt id massa sit amet finibus.`
+);
+
+const joeDoeUser = new UserViewModel(
+  'Joe',
+  'Doe',
+  `Sed et bibendum mi. Sed aliquet, libero eget posuere iaculis,
+            lectus massa consequat eros, vel sagittis ligula sem at lectus.
+            Aenean porttitor suscipit consequat.`
+);
+
+class ApplicationViewModel {
+  selectedUser = new ObservableValue&lt;UserViewModel&gt;(johnSmithUser);
+
+  public toggleUser() {
+    this.selectedUser.mutate(user =&gt;
+      user === johnSmithUser ? joeDoeUser : johnSmithUser
+    );
+  }
+}
+
+class UserDetailsView {
+  constructor(private viewModel: UserViewModel) {}
+
+  public template() {
+    return (
+      &lt;section&gt;
+        &lt;p&gt;First Name: {this.viewModel.firstName}&lt;/p&gt;
+        &lt;p&gt;First Name: {this.viewModel.lastName}&lt;/p&gt;
+        &lt;h3&gt;Bio&lt;/h3&gt;
+        &lt;p&gt;{this.viewModel.bio}&lt;/p&gt;
+      &lt;/section&gt;
+    );
+  }
+}
+
+const ApplicationView = (viewModel: ApplicationViewModel) =&gt; (
+  &lt;section class=&quot;app&quot;&gt;
+    &lt;h1&gt;User Details&lt;/h1&gt;
+
+    &lt;Value view={UserDetailsView} model={viewModel.selectedUser} /&gt;
+
+    &lt;button _click={viewModel.toggleUser}&gt;Toggle Users&lt;/button&gt;
+  &lt;/section&gt;
+);
+
+const application = new Application();
+const applicationViewModel = new ApplicationViewModel();
+
+application.render('root', ApplicationView, applicationViewModel);
+</code></pre></section></section><section class="panel"><header class="panel__header">Result</header><section class="panel__content results-container"><div class="scrollable" id="destination"><div id="root"></div>
+<script>(function () {}());</script></div></section></section></main><script src="index.js"></script></body></html>
